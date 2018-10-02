@@ -1,13 +1,6 @@
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const sinon = require('sinon');
-const stampit = require('stampit');
-const getSpaceUsage = require('./get_space_usage');
+import { getSpaceUsage } from './get_space_usage.js';
 
-chai.use(require('chai-string'));
-
-chai.use(chaiAsPromised);
 const { expect } = chai;
 
 
@@ -17,15 +10,25 @@ describe('space_usage_api', () => {
   let mockSiteId;
 
   before(() => {
-    expectedSpaceUsageQueryString = `query SpaceUsagesBySiteId($siteId: SpaceUsageInput) {
-      CreateSpaceUsage(siteId: $siteId) {
-      _id
-      spaceId
-      usagePeriodStartTime
-      usagePeriodEndTime
-      numberOfPeopleRecorded
-      }
-    }`;
+    expectedSpaceUsageQueryString = `query SpaceUsagesbySiteId($siteId: String) { 
+      SpaceUsagesBySiteId(siteId: $siteId) {
+        _id
+        spaceId
+        usagePeriodStartTime
+        usagePeriodEndTime
+        numberOfPeopleRecorded
+      }}`;
+
+    const mockSpaceUsageData = 'space usage data';
+    const mockSuccessfulGetSpaceUsageResponse = {
+      data: {
+        data: {
+          SpaceUsagesBySiteId: mockSpaceUsageData,
+        },
+      },
+    };
+    postStub = sinon.stub(axios, 'post');
+    postStub.returns(mockSuccessfulGetSpaceUsageResponse);
 
     mockSiteId = '1901';
   });
@@ -33,7 +36,7 @@ describe('space_usage_api', () => {
   it('should make call to get space usage api with the specified site id and correct query format', async () => {
     const returnedSpaceUsages = await getSpaceUsage(mockSiteId);
 
-    expect(postStub.args[0][0]).equals('/');
+    expect(postStub.args[0][0]).equals('http://localhost:4000/');
     expect(postStub.args[0][1].variables).deep.equals({ siteId: mockSiteId });
     expect(postStub.args[0][1].query).equalIgnoreSpaces(expectedSpaceUsageQueryString);
   });

@@ -6,7 +6,6 @@
       <script type="module">
         import { getSpaceUsage } from './get_space_usage.js';
 
-        getSpaceUsage();
         window.getSpaceUsage = getSpaceUsage;
       </script>
   </head>
@@ -17,8 +16,13 @@
 <p>My first paragraph.</p>
 
 <script>
-    window.onload = () => {
-        getSpaceUsage();
+    window.onload = async () => {
+      try {
+        const response = await getSpaceUsage('1901');
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
     };
 </script> 
 
