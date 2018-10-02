@@ -1,4 +1,6 @@
 
+const { axios } = window;
+
 const getSpaceUsageQueryString = `query SpaceUsagesbySiteId($siteId: String) { 
   SpaceUsagesBySiteId(siteId: $siteId) {
     _id

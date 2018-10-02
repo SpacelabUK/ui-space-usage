@@ -23,7 +23,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch test runner",
-      "program": "${workspaceFolder}\\public\\server_for_test_runner.js"
+      "program": "${workspaceFolder}\\server_for_test_runner.js"
     },
     {
       "type": "node",

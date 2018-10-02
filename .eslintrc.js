@@ -10,7 +10,7 @@ module.exports = {
     ],
     "env": {
       "mocha": true,
-      "jest": true
+      "browser": true
     },
     "rules": {
       "global-require": 0,

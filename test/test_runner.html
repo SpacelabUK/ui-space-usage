@@ -11,16 +11,16 @@
 <script src="https://unpkg.com/mocha@4.0.1/mocha.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sinon@3/pkg/sinon.js"></script>
-<script src="chai-string.js"></script>
+<script src="./helpers/chai-string.js"></script>
 
 
 <script>mocha.setup('bdd');
 
 </script>
-<script type="module" src="./get_space_usage_test.js"></script>
+<script type="module" src="./get_space_usage/get_space_usage_test.js"></script>
 <script type="module">
     mocha.checkLeaks();
-    mocha.run();
+    mocha.run().globals(['__VUE_DEVTOOLS_TOAST__']);
 </script>
 
 </body>
