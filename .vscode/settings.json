@@ -10,8 +10,8 @@
     },
     "eslint.validate": [
       {
-      "language": "html",
-      "autoFix": true
+        "language": "html",
+        "autoFix": true
       },
       {
         "language": "vue",

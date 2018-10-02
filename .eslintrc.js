@@ -6,6 +6,7 @@ module.exports = {
     "plugins": [
       "chai-friendly",
       "mocha",
+      "html",
     ],
     "env": {
       "mocha": true,
@@ -13,6 +14,7 @@ module.exports = {
     },
     "rules": {
       "global-require": 0,
+      "import/extensions": 0,
       "linebreak-style": ["error", "windows"],
       "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
       "import/no-extraneous-dependencies": [2, { devDependencies: true }],

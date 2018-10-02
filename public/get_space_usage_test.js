@@ -3,8 +3,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const stampit = require('stampit');
-const SpaceUsageApiStampFactory = require('./space_usage_api');
-const checkIfSuccessfulGraphqlResponseHasNestedError = require('../../helpers/graphql_response_error_checker');
+const getSpaceUsage = require('./get_space_usage');
 
 chai.use(require('chai-string'));
 
