@@ -18,7 +18,7 @@ const makeSaveSpaceUsageCall = async siteId => axios.post(
   },
 );
 
-const checkIfSuccessfulGraphqlResponseHasNestedError = (response) => {
+const throwIfSuccessfulGraphqlResponseHasNestedError = (response) => {
   if (response.data.errors && response.data.errors.length > 0) {
     const nestedError = new Error(response.data.errors[0].message);
     nestedError.errorDetail = response;
@@ -26,15 +26,15 @@ const checkIfSuccessfulGraphqlResponseHasNestedError = (response) => {
   }
 };
 
-export const getSpaceUsage = siteId => new Promise(async (resolve, reject) => {
+export const getSpaceUsage = async (siteId) => {
   try {
     const response = await makeSaveSpaceUsageCall(siteId);
-    checkIfSuccessfulGraphqlResponseHasNestedError(response);
+    throwIfSuccessfulGraphqlResponseHasNestedError(response);
 
-    resolve(response.data.data.SpaceUsagesBySiteId);
+    return response.data.data.SpaceUsagesBySiteId;
   } catch (error) {
-    reject(error);
+    throw error;
   }
-});
+};
 
 export default getSpaceUsage;
