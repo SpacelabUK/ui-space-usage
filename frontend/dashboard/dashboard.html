@@ -243,7 +243,7 @@ window.onload = async () => {
     const dateGroup = dateDimension.group().reduceSum(d => d.occupancy);
     const minDate = dateDimension.bottom(1)[0].usagePeriodStartTime;
     const maxDate = dateDimension.top(1)[0].usagePeriodStartTime;
-    const lineChart = dc.lineChart('#total-chart')
+    lineChart = dc.lineChart('#total-chart')
       .width(500)
       .height(200)
       .margins({
@@ -266,7 +266,7 @@ window.onload = async () => {
     const qtyDimension = facts.dimension(d => d.occupancy);
     const qtyGroup = qtyDimension.group();
 
-    const pieChart = dc.pieChart('#ocup-chart')
+    pieChart = dc.pieChart('#ocup-chart')
       .height(300)
       .width(300)
       .slicesCap(5)
@@ -285,7 +285,7 @@ window.onload = async () => {
     const typeDimension = facts.dimension(d => d.spaceName);
     const typeGroup = typeDimension.group();
 
-    const rowChart = dc.rowChart('#type-chart')
+    rowChart = dc.rowChart('#type-chart')
       .height(300)
       .group(typeGroup)
       .dimension(typeDimension);
