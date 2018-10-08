@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="EN">
 <head>
   <meta charset="utf-8">
   <title>Dashboard 4</title>
-  <link rel="stylesheet" type="text/css" href="../dc.css" />
+  <link rel="stylesheet" type="text/css" href="./css/dc.css" />
   <!-- <link rel="stylesheet" type="text/css" href="../../bootstrap.css" /> -->
   <style>
     .text-beautify  {
@@ -22,7 +23,7 @@
 
     body, html {
       height: 100%;
-      margin: 100;
+      margin: 100px;
       padding: 0;
       background: white;
     }
@@ -139,8 +140,8 @@
         <h2>Total occupancy over time</h2>
         <a class="reset" style="display:none" href="javascript:lineChart.filterAll(); dc.redrawAll();">Reset</a>
       </div>
-
     </div>
+  </div>
 
   <!-- <div class="column">
       <h2>Recordings</h2>
@@ -148,12 +149,12 @@
     </div>
   </div> -->
 
-  <script type="text/javascript" src="../d3.js"></script>
-  <script type="text/javascript" src="../crossfilter.js"></script>
-  <script type="text/javascript" src="../dc_beta32.js"></script>
-  <script type="text/javascript" src="../colorbrewer.js"></script>
+  <script src="d3.js"></script>
+  <script src="crossfilter.js"></script>
+  <script src="dc_beta32.js"></script>
+  <script src="colorbrewer.js"></script>
 
-  <script type="text/javascript">
+  <script>
 
   function print_filter(filter) {
     var f=eval(filter);
