@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="EN">
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard 4</title>
+  <link rel="stylesheet" type="text/css" href="../dc.css" />
+  <!-- <link rel="stylesheet" type="text/css" href="../../bootstrap.css" /> -->
+  <style>
+    .text-beautify  {
+      position:absolute;
+      top:20px;
+      left:680px;
+      color: black;
+      font-size: 40px;
+      font-family: 'Radikal-Medium';
+    }
+
+    @font-face {
+      font-family: 'Radikal-Medium'; /*a name to be used later*/
+      src: '../Fonts/Nootype - Radikal-Medium.otf'; /*URL to font*/
+    }
+
+    body, html {
+      height: 100%;
+      margin: 100;
+      padding: 0;
+      background: white;
+    }
+    div {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    td {
+      border: 1px solid gainsboro;
+    }
+
+    .info {
+      background-color: blue;
+    }
+
+
+    div.row {
+        display: block;
+        height: 100%;
+        width: 100%;
+    }
+
+    /*div.column {
+      width: 33%;
+      height: 100%;
+      display: block;
+      float: left;
+      border:1px solid pink;
+    }*/
+
+    div.column {
+      display: block;
+      height: 50%;
+      width: 30%;
+      float: left;
+      /*border:1px solid red;*/
+      position:absolute;
+      top:50px;
+      left:700px;
+    }
+    div.column div.subColumn {
+      display: block;
+      height: 100%;
+      width: 50%;
+      float: left;
+      /*border:1px solid green;*/
+    }
+
+    div.column div.subRow {
+      display: block;
+      height: 80%;
+      width: 100%;
+      float: left;
+      margin-top: 20px;
+      /*border:1px solid blue;*/
+      position:absolute;
+      top:450px;
+      left:0px;
+    }
+
+    h2 {
+      margin-top: 100px;
+      text-align: center;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: 0 auto;
+        margin-top: 45px;
+    }
+
+    table thead tr,
+    table tbody tr {
+        border-bottom: 1px solid gainsboro;
+        line-height: 1; /*column height*/
+    }
+
+    table tbody tr:hover {
+        background-color: lightblue;
+        cursor: pointer;
+    }
+
+    table thead tr {
+      border-top: 1px solid gainsboro;
+      background-color: steelblue;
+      line-height: 2;
+      color: white;
+    }
+
+    table tbody tr td,
+    table thead tr td {
+      width: 80%;/*column width*/
+      text-align: center;
+
+    }
+
+  </style>
+</head>
+<body>
+<p class="text-beautify">Workplace monitoring dashboard</p>
+  <div class="row">
+    <div class="column" >
+      <div class="subColumn" id="ocup-chart">
+        <h2>Occupancy</h2>
+        <a class="reset" style="display:none" href="javascript:pieChart.filterAll(); dc.redrawAll();"><ruby></ruby>Reset</a>
+      </div>
+      <div class="subColumn" id="type-chart">
+        <h2>Space type</h2>
+        <a class="reset" style="display:none" href="javascript:rowChart.filterAll(); dc.redrawAll();">Reset</a>
+      </div>
+      <div class="subRow" id="total-chart">
+        <h2>Total occupancy over time</h2>
+        <a class="reset" style="display:none" href="javascript:lineChart.filterAll(); dc.redrawAll();">Reset</a>
+      </div>
+
+    </div>
+
+  <!-- <div class="column">
+      <h2>Recordings</h2>
+      <table id="recordings-table"></table>
+    </div>
+  </div> -->
+
+  <script type="text/javascript" src="../d3.js"></script>
+  <script type="text/javascript" src="../crossfilter.js"></script>
+  <script type="text/javascript" src="../dc_beta32.js"></script>
+  <script type="text/javascript" src="../colorbrewer.js"></script>
+
+  <script type="text/javascript">
+
+  function print_filter(filter) {
+    var f=eval(filter);
+    if (typeof(f.length) != "undefined") {}else{}
+    if (typeof(f.top) != "undefined") {f=f.top(Infinity);}else{}
+    if (typeof(f.dimension) != "undefined") {f=f.dimension(function(d) { return "";}).top(Infinity);}else{}
+    console.log(filter+"("+f.length+") = "+JSON.stringify(f).replace("[","[\n\t").replace(/}\,/g,"},\n\t").replace("]","\n]"));
+  }
+
+  // load the data
+  // d3.json("data.json", function(error, data) {
+  //   if (error) throw error;
+  //     });
+  // console.log(data);
+
+  var data = [
+  {usagePeriodStartTime: "2011-11-14T16:17:54Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceID: "ground"},
+  {usagePeriodStartTime: "2011-11-14T16:20:19Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceID: "ground"},
+  {usagePeriodStartTime: "2011-11-14T16:28:54Z", spaceNumberOfSeats: 10, numberOfPeopleRecorded: 3, occupancy: 0.3, spaceID: "second"},
+  {usagePeriodStartTime: "2011-11-14T16:30:43Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceID: "ground"},
+  {usagePeriodStartTime: "2011-11-14T16:48:46Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceID: "ground"},
+  {usagePeriodStartTime: "2011-11-14T16:53:41Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceID: "ground"},
+  {usagePeriodStartTime: "2011-11-14T16:54:06Z", spaceNumberOfSeats: 14, numberOfPeopleRecorded: 10, occupancy: 0.71, spaceID: "first"},
+  {usagePeriodStartTime: "2011-11-14T16:58:03Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceID: "ground"},
+  {usagePeriodStartTime: "2011-11-14T17:07:21Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceID: "ground"},
+  {usagePeriodStartTime: "2011-11-14T17:22:59Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceID: "ground"},
+  {usagePeriodStartTime: "2011-11-14T17:25:45Z", spaceNumberOfSeats: 14, numberOfPeopleRecorded: 5, occupancy: 0.35, spaceID: "first"},
+  {usagePeriodStartTime: "2011-11-14T17:29:52Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 10, occupancy: 0.5, spaceID: "second"}
+];
+
+data.forEach(function(d){
+  var tempDate = new Date(d.usagePeriodStartTime);
+  d.usagePeriodStartTime = tempDate;
+
+})
+
+var facts = crossfilter(data);
+
+//TABLE
+var dateDimension = facts.dimension(function(d){ return d.usagePeriodStartTime; });
+var dataTable = dc.dataTable("#recordings-table")
+      .width(450)
+      .height(550)
+      .dimension(dateDimension)
+      .showGroups(false)
+      // .size(5)
+      .group(function(d){ return d.spaceID; })
+      .columns([{label:'Time',format: function(d){ return d.usagePeriodStartTime.getHours()+':'+d.usagePeriodStartTime.getMinutes(); }},
+                'spaceNumberOfSeats',
+                'numberOfPeopleRecorded',
+                'occupancy',
+                'spaceID'])
+      .sortBy(function(d){ return d.usagePeriodStartTime; })
+      .order(d3.ascending);
+
+//LINE CHART
+var dateGroup = dateDimension.group().reduceSum(function(d){ return d.occupancy; });
+var minDate = dateDimension.bottom(1)[0].usagePeriodStartTime;
+var maxDate = dateDimension.top(1)[0].usagePeriodStartTime;
+var lineChart = dc.lineChart("#total-chart")
+    .width(500)
+    .height(200)
+    .margins({top:10,bottom:30,right:10,left:70})
+    .dimension(dateDimension)
+    .group(dateGroup,"occupancy over time")
+    .yAxisLabel("% of occupancy")
+    .renderHorizontalGridLines(true)
+    .renderArea(true)
+    .legend(dc.legend().x(1200).y(5).itemHeight(12).gap(5))
+    .x(d3.time.scale().domain([minDate,maxDate]));
+
+
+    lineChart.yAxis().ticks(6);
+    lineChart.xAxis().ticks(6);
+
+//PIE CHART
+var qtyDimension = facts.dimension(function(d){ return d.occupancy; });
+var qtyGroup = qtyDimension.group();
+
+var pieChart = dc.pieChart("#ocup-chart")
+      .height(300)
+      .width(300)
+      .slicesCap(5)
+      .radius(100)
+      .innerRadius(40)
+      // .filter(1)
+      .dimension(qtyDimension)
+      .group(qtyGroup)
+      .legend(dc.legend())
+      .on('pretransition', function(chart) {
+        chart.selectAll('text.pie-slice').text(function(d) {
+            return dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2*Math.PI) * 100) + '%';
+        })
+    });;
+
+
+//ROW TABLE
+var typeDimension = facts.dimension(function(d){ return d.spaceID; });
+var typeGroup = typeDimension.group();
+
+var rowChart = dc.rowChart("#type-chart")
+      .height(300)
+      .group(typeGroup)
+      .dimension(typeDimension);
+
+dc.renderAll();
+
+  // console.log(data);
+  // console.log(facts);
+
+  </script>
+
+</body>
+</html>
