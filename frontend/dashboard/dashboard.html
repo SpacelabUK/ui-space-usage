@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8">
   <title>Dashboard 4</title>
-  <link rel="stylesheet" type="text/css" href="./css/dc.css" />
-  <!-- <link rel="stylesheet" type="text/css" href="../../bootstrap.css" /> -->
+  <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
   <style>
     .text-beautify  {
       position:absolute;
@@ -13,12 +13,12 @@
       left:680px;
       color: black;
       font-size: 40px;
-      font-family: 'Radikal-Medium';
+      font-family: 'Radikal-Regular';
     }
 
     @font-face {
-      font-family: 'Radikal-Medium'; /*a name to be used later*/
-      src: '../Fonts/Nootype - Radikal-Medium.otf'; /*URL to font*/
+      font-family: 'Radikal-Regular'; /*a name to be used later*/
+      src: url('../Fonts/Radikal-Regular.otf'); /*URL to font*/
     }
 
     body, html {
@@ -121,149 +121,183 @@
       text-align: center;
 
     }
-
   </style>
 </head>
+
 <body>
 <p class="text-beautify">Workplace monitoring dashboard</p>
-  <div class="row">
-    <div class="column" >
-      <div class="subColumn" id="ocup-chart">
-        <h2>Occupancy</h2>
-        <a class="reset" style="display:none" href="javascript:pieChart.filterAll(); dc.redrawAll();"><ruby></ruby>Reset</a>
-      </div>
-      <div class="subColumn" id="type-chart">
-        <h2>Space type</h2>
-        <a class="reset" style="display:none" href="javascript:rowChart.filterAll(); dc.redrawAll();">Reset</a>
-      </div>
-      <div class="subRow" id="total-chart">
-        <h2>Total occupancy over time</h2>
-        <a class="reset" style="display:none" href="javascript:lineChart.filterAll(); dc.redrawAll();">Reset</a>
-      </div>
+<div class="row">
+  <div class="column" >
+    <div class="subColumn" id="ocup-chart">
+      <h2>Occupancy</h2>
+      <a class="reset" style="display:none" href="javascript:pieChart.filterAll(); dc.redrawAll();"><ruby></ruby>Reset</a>
+    </div>
+    <div class="subColumn" id="type-chart">
+      <h2>Space type</h2>
+      <a class="reset" style="display:none" href="javascript:rowChart.filterAll(); dc.redrawAll();">Reset</a>
+    </div>
+    <div class="subRow" id="total-chart">
+      <h2>Total occupancy over time</h2>
+      <a class="reset" style="display:none" href="javascript:lineChart.filterAll(); dc.redrawAll();">Reset</a>
     </div>
   </div>
+</div>
 
-  <!-- <div class="column">
-      <h2>Recordings</h2>
-      <table id="recordings-table"></table>
-    </div>
-  </div> -->
+<!-- <div class="column">
+    <h2>Recordings</h2>
+    <table id="recordings-table"></table>
+  </div>
+</div> -->
 
-  <script src="d3.js"></script>
-  <script src="crossfilter.js"></script>
-  <script src="dc_beta32.js"></script>
-  <script src="colorbrewer.js"></script>
+<script src="d3.js"></script>
+<script src="crossfilter.js"></script>
+<script src="dc_beta32.js"></script>
+<script src="colorbrewer.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="module">
+  import { getSpaceUsage } from '../get_space_usage_data/get_space_usage.js';
 
-  <script>
+  window.getSpaceUsage = getSpaceUsage;
+</script>
 
-  function print_filter(filter) {
-    var f=eval(filter);
-    if (typeof(f.length) != "undefined") {}else{}
-    if (typeof(f.top) != "undefined") {f=f.top(Infinity);}else{}
-    if (typeof(f.dimension) != "undefined") {f=f.dimension(function(d) { return "";}).top(Infinity);}else{}
-    console.log(filter+"("+f.length+") = "+JSON.stringify(f).replace("[","[\n\t").replace(/}\,/g,"},\n\t").replace("]","\n]"));
-  }
+<script>
 
-  // load the data
-  // d3.json("data.json", function(error, data) {
-  //   if (error) throw error;
-  //     });
-  // console.log(data);
+window.onload = async () => {
+  try {
+    function print_filter(filter) {
+      let f = eval(filter);
+      if (typeof (f.length) !== 'undefined') {} else {}
+      if (typeof (f.top) !== 'undefined') { f = f.top(Infinity); } else {}
+      if (typeof (f.dimension) !== 'undefined') { f = f.dimension(d => '').top(Infinity); } else {}
+      console.log(`${filter}(${f.length}) = ${JSON.stringify(f).replace('[', '[\n\t').replace(/}\,/g, '},\n\t').replace(']', '\n]')}`);
+    }
 
-  var data = [
-  {usagePeriodStartTime: "2011-11-14T16:17:54Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceID: "ground"},
-  {usagePeriodStartTime: "2011-11-14T16:20:19Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceID: "ground"},
-  {usagePeriodStartTime: "2011-11-14T16:28:54Z", spaceNumberOfSeats: 10, numberOfPeopleRecorded: 3, occupancy: 0.3, spaceID: "second"},
-  {usagePeriodStartTime: "2011-11-14T16:30:43Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceID: "ground"},
-  {usagePeriodStartTime: "2011-11-14T16:48:46Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceID: "ground"},
-  {usagePeriodStartTime: "2011-11-14T16:53:41Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceID: "ground"},
-  {usagePeriodStartTime: "2011-11-14T16:54:06Z", spaceNumberOfSeats: 14, numberOfPeopleRecorded: 10, occupancy: 0.71, spaceID: "first"},
-  {usagePeriodStartTime: "2011-11-14T16:58:03Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceID: "ground"},
-  {usagePeriodStartTime: "2011-11-14T17:07:21Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceID: "ground"},
-  {usagePeriodStartTime: "2011-11-14T17:22:59Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceID: "ground"},
-  {usagePeriodStartTime: "2011-11-14T17:25:45Z", spaceNumberOfSeats: 14, numberOfPeopleRecorded: 5, occupancy: 0.35, spaceID: "first"},
-  {usagePeriodStartTime: "2011-11-14T17:29:52Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 10, occupancy: 0.5, spaceID: "second"}
-];
+    // load the data
+    // d3.json("data.json", function(error, data) {
+    //   if (error) throw error;
+    //     });
+    // console.log(data);
 
-data.forEach(function(d){
-  var tempDate = new Date(d.usagePeriodStartTime);
-  d.usagePeriodStartTime = tempDate;
+    const data = [
+      {
+        usagePeriodStartTime: '2011-11-14T16:17:54Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceName: 'ground',
+      },
+      {
+        usagePeriodStartTime: '2011-11-14T16:20:19Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceName: 'ground',
+      },
+      {
+        usagePeriodStartTime: '2011-11-14T16:28:54Z', spaceNumberOfSeats: 10, numberOfPeopleRecorded: 3, occupancy: 0.3, spaceName: 'second',
+      },
+      {
+        usagePeriodStartTime: '2011-11-14T16:30:43Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: 'ground',
+      },
+      {
+        usagePeriodStartTime: '2011-11-14T16:48:46Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: 'ground',
+      },
+      {
+        usagePeriodStartTime: '2011-11-14T16:53:41Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: 'ground',
+      },
+      {
+        usagePeriodStartTime: '2011-11-14T16:54:06Z', spaceNumberOfSeats: 14, numberOfPeopleRecorded: 10, occupancy: 0.71, spaceName: 'first',
+      },
+      {
+        usagePeriodStartTime: '2011-11-14T16:58:03Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: 'ground',
+      },
+      {
+        usagePeriodStartTime: '2011-11-14T17:07:21Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceName: 'ground',
+      },
+      {
+        usagePeriodStartTime: '2011-11-14T17:22:59Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceName: 'ground',
+      },
+      {
+        usagePeriodStartTime: '2011-11-14T17:25:45Z', spaceNumberOfSeats: 14, numberOfPeopleRecorded: 5, occupancy: 0.35, spaceName: 'first',
+      },
+      {
+        usagePeriodStartTime: '2011-11-14T17:29:52Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 10, occupancy: 0.5, spaceName: 'second',
+      },
+    ];
 
-})
+    data.forEach((d) => {
+      const tempDate = new Date(d.usagePeriodStartTime);
+      d.usagePeriodStartTime = tempDate;
+    });
 
-var facts = crossfilter(data);
+    const facts = crossfilter(data);
 
-//TABLE
-var dateDimension = facts.dimension(function(d){ return d.usagePeriodStartTime; });
-var dataTable = dc.dataTable("#recordings-table")
+    // TABLE
+    const dateDimension = facts.dimension(d => d.usagePeriodStartTime);
+    const dataTable = dc.dataTable('#recordings-table')
       .width(450)
       .height(550)
       .dimension(dateDimension)
       .showGroups(false)
-      // .size(5)
-      .group(function(d){ return d.spaceID; })
-      .columns([{label:'Time',format: function(d){ return d.usagePeriodStartTime.getHours()+':'+d.usagePeriodStartTime.getMinutes(); }},
-                'spaceNumberOfSeats',
-                'numberOfPeopleRecorded',
-                'occupancy',
-                'spaceID'])
-      .sortBy(function(d){ return d.usagePeriodStartTime; })
+    // .size(5)
+      .group(d => d.spaceName)
+      .columns([{ label: 'Time', format(d) { return `${d.usagePeriodStartTime.getHours()}:${d.usagePeriodStartTime.getMinutes()}`; } },
+        'spaceOccupancy',
+        'spaceName'])
+      .sortBy(d => d.usagePeriodStartTime)
       .order(d3.ascending);
 
-//LINE CHART
-var dateGroup = dateDimension.group().reduceSum(function(d){ return d.occupancy; });
-var minDate = dateDimension.bottom(1)[0].usagePeriodStartTime;
-var maxDate = dateDimension.top(1)[0].usagePeriodStartTime;
-var lineChart = dc.lineChart("#total-chart")
-    .width(500)
-    .height(200)
-    .margins({top:10,bottom:30,right:10,left:70})
-    .dimension(dateDimension)
-    .group(dateGroup,"occupancy over time")
-    .yAxisLabel("% of occupancy")
-    .renderHorizontalGridLines(true)
-    .renderArea(true)
-    .legend(dc.legend().x(1200).y(5).itemHeight(12).gap(5))
-    .x(d3.time.scale().domain([minDate,maxDate]));
+    // LINE CHART
+    const dateGroup = dateDimension.group().reduceSum(d => d.occupancy);
+    const minDate = dateDimension.bottom(1)[0].usagePeriodStartTime;
+    const maxDate = dateDimension.top(1)[0].usagePeriodStartTime;
+    const lineChart = dc.lineChart('#total-chart')
+      .width(500)
+      .height(200)
+      .margins({
+        top: 10, bottom: 30, right: 10, left: 70,
+      })
+      .dimension(dateDimension)
+      .group(dateGroup, 'occupancy over time')
+      .yAxisLabel('% of occupancy')
+      .renderHorizontalGridLines(true)
+      .renderArea(true)
+      .legend(dc.legend().x(1200).y(5).itemHeight(12)
+        .gap(5))
+      .x(d3.time.scale().domain([minDate, maxDate]));
 
 
     lineChart.yAxis().ticks(6);
     lineChart.xAxis().ticks(6);
 
-//PIE CHART
-var qtyDimension = facts.dimension(function(d){ return d.occupancy; });
-var qtyGroup = qtyDimension.group();
+    // PIE CHART
+    const qtyDimension = facts.dimension(d => d.occupancy);
+    const qtyGroup = qtyDimension.group();
 
-var pieChart = dc.pieChart("#ocup-chart")
+    const pieChart = dc.pieChart('#ocup-chart')
       .height(300)
       .width(300)
       .slicesCap(5)
       .radius(100)
       .innerRadius(40)
-      // .filter(1)
+    // .filter(1)
       .dimension(qtyDimension)
       .group(qtyGroup)
       .legend(dc.legend())
-      .on('pretransition', function(chart) {
-        chart.selectAll('text.pie-slice').text(function(d) {
-            return dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2*Math.PI) * 100) + '%';
-        })
-    });;
+      .on('pretransition', (chart) => {
+        chart.selectAll('text.pie-slice').text(d => `${dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2 * Math.PI) * 100)}%`);
+      });
 
 
-//ROW TABLE
-var typeDimension = facts.dimension(function(d){ return d.spaceID; });
-var typeGroup = typeDimension.group();
+    // ROW TABLE
+    const typeDimension = facts.dimension(d => d.spaceName);
+    const typeGroup = typeDimension.group();
 
-var rowChart = dc.rowChart("#type-chart")
+    const rowChart = dc.rowChart('#type-chart')
       .height(300)
       .group(typeGroup)
       .dimension(typeDimension);
 
-dc.renderAll();
+    dc.renderAll();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-  // console.log(data);
-  // console.log(facts);
+// console.log(data);
+// console.log(facts);
 
   </script>
 
