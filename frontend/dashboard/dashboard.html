@@ -172,51 +172,20 @@ window.onload = async () => {
       console.log(`${filter}(${f.length}) = ${JSON.stringify(f).replace('[', '[\n\t').replace(/}\,/g, '},\n\t').replace(']', '\n]')}`);
     }
 
-    const data = [
-      {
-        usagePeriodStartTime: '2011-11-14T16:17:54Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceName: 'ground',
-      },
-      {
-        usagePeriodStartTime: '2011-11-14T16:20:19Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceName: 'ground',
-      },
-      {
-        usagePeriodStartTime: '2011-11-14T16:28:54Z', spaceNumberOfSeats: 10, numberOfPeopleRecorded: 3, occupancy: 0.3, spaceName: 'second',
-      },
-      {
-        usagePeriodStartTime: '2011-11-14T16:30:43Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: 'ground',
-      },
-      {
-        usagePeriodStartTime: '2011-11-14T16:48:46Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: 'ground',
-      },
-      {
-        usagePeriodStartTime: '2011-11-14T16:53:41Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: 'ground',
-      },
-      {
-        usagePeriodStartTime: '2011-11-14T16:54:06Z', spaceNumberOfSeats: 14, numberOfPeopleRecorded: 10, occupancy: 0.71, spaceName: 'first',
-      },
-      {
-        usagePeriodStartTime: '2011-11-14T16:58:03Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: 'ground',
-      },
-      {
-        usagePeriodStartTime: '2011-11-14T17:07:21Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceName: 'ground',
-      },
-      {
-        usagePeriodStartTime: '2011-11-14T17:22:59Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceName: 'ground',
-      },
-      {
-        usagePeriodStartTime: '2011-11-14T17:25:45Z', spaceNumberOfSeats: 14, numberOfPeopleRecorded: 5, occupancy: 0.35, spaceName: 'first',
-      },
-      {
-        usagePeriodStartTime: '2011-11-14T17:29:52Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 10, occupancy: 0.5, spaceName: 'second',
-      },
-    ];
+    // load the data
+    // d3.json("data.json", function(error, data) {
+    //   if (error) throw error;
+    //     });
+    // console.log(data);
 
-    data.forEach((d) => {
+    const spaceUsageData = await getSpaceUsage('1001');
+
+    spaceUsageData.forEach((d) => {
       const tempDate = new Date(d.usagePeriodStartTime);
       d.usagePeriodStartTime = tempDate;
     });
 
-    const facts = crossfilter(data);
+    const facts = crossfilter(spaceUsageData);
 
     // TABLE
     const dateDimension = facts.dimension(d => d.usagePeriodStartTime);
