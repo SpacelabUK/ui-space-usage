@@ -8,6 +8,7 @@ const getSpaceUsageQueryString = `query SpaceUsagesbySiteId($siteId: String) {
     usagePeriodEndTime
     spaceName
     occupancy
+    numberOfPeopleRecorded
   }}`;
 
 const makeSaveSpaceUsageCall = async siteId => axios.post(
