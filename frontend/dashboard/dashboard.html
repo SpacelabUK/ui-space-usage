@@ -179,7 +179,7 @@ window.onload = async () => {
       d.usagePeriodStartTime = tempDate;
     });
 
-    const facts = crossfilter(spaceUsageData);
+    const facts = crossfilter(data);
 
     // TABLE
     const dateDimension = facts.dimension(d => d.usagePeriodStartTime);
