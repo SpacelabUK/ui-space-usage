@@ -37,7 +37,6 @@ div.dc-chart {
 
 .dc-chart .pie-slice {
     fill: white;
-    font-size: 12px'Radikal-Medium';
     cursor: pointer;
 }
 
@@ -77,10 +76,6 @@ div.dc-chart {
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
-}
-
-.dc-chart .axis text {
-    font: 10px'Radikal-Medium';
 }
 
 .dc-chart .grid-line,
@@ -135,7 +130,6 @@ div.dc-chart {
 
 .dc-chart .node {
     font-size: 0.7em;
-    font:'Radikal-Medium';
     cursor: pointer;
 }
 
@@ -169,7 +163,6 @@ div.dc-chart {
 .dc-data-count .filter-count {
     color: #3182bd;
     font-weight: bold;
-    font:'Radikal-Medium';
 }
 
 .dc-data-count .total-count {
@@ -227,12 +220,7 @@ div.dc-chart {
 
 .dc-chart g.row text {
     fill: white;
-    font-size: 12px'Radikal-Medium';
     cursor: pointer;
-}
-
-.dc-legend {
-    font-size: 11px'Radikal-Medium';
 }
 
 .dc-legend-item {
@@ -276,7 +264,6 @@ g.dc-legend-item.fadeout {
 }
 
 .dc-chart .box text {
-    font: 10px 'Radikal-Medium';
     -webkit-user-select: none; /* Chrome/Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10 */

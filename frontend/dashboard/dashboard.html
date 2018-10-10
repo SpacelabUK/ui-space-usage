@@ -5,20 +5,12 @@
   <meta charset="utf-8">
   <title>Dashboard 4</title>
   <link rel="stylesheet" type="text/css" href="../css/dc.css" />
-  <!-- /*<link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />* -->
+  <link rel="stylesheet" type="text/css" href="../css/spacelab.css" />
   <style>
     .text-beautify  {
       position:absolute;
       top:20px;
       left:680px;
-      color: black;
-      font-size: 40px;
-      font-family: 'Radikal-Regular';
-    }
-
-    @font-face {
-      font-family: 'Radikal-Regular'; /*a name to be used later*/
-      src: url('../Fonts/Radikal-Regular.otf'); /*URL to font*/
     }
 
     body, html {
@@ -125,19 +117,19 @@
 </head>
 
 <body>
-<p class="text-beautify">Workplace monitoring dashboard</p>
+<p class="text-beautify page-header">Workplace monitoring dashboard</p>
 <div class="row">
   <div class="column" >
-    <div class="subColumn" id="ocup-chart">
-      <h2>Occupancy</h2>
+    <div class="subColumn graphic" id="ocup-chart">
+      <h2 class="graphics-header">Occupancy</h2>
       <a class="reset" style="display:none" href="javascript:pieChart.filterAll(); dc.redrawAll();"><ruby></ruby>Reset</a>
     </div>
-    <div class="subColumn" id="type-chart">
-      <h2>Space type</h2>
+    <div class="subColumn graphic" id="type-chart">
+      <h2 class="graphics-header">Space type</h2>
       <a class="reset" style="display:none" href="javascript:rowChart.filterAll(); dc.redrawAll();">Reset</a>
     </div>
-    <div class="subRow" id="total-chart">
-      <h2>Total occupancy over time</h2>
+    <div class="subRow graphic" id="total-chart">
+      <h2 class="graphics-header">Total occupancy over time</h2>
       <a class="reset" style="display:none" href="javascript:lineChart.filterAll(); dc.redrawAll();">Reset</a>
     </div>
   </div>
