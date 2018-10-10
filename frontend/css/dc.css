@@ -35,10 +35,9 @@ div.dc-chart {
     cursor: default;
 }
 
-.dc-chart,.pie-slice {
+.dc-chart .pie-slice {
     fill: white;
-    font-size: 12px;
-    font-family: 'Radikal-Regular';
+    font-size: 12px'Radikal-Medium';
     cursor: pointer;
 }
 
@@ -80,9 +79,8 @@ div.dc-chart {
     shape-rendering: crispEdges;
 }
 
-.dc-chart,.axis text {
-    font: 10px;
-    font-family:'Radikal-Regular';
+.dc-chart .axis text {
+    font: 10px'Radikal-Medium';
 }
 
 .dc-chart .grid-line,
@@ -135,7 +133,7 @@ div.dc-chart {
     stroke: none;
 }
 
-.dc-chart,.node {
+.dc-chart .node {
     font-size: 0.7em;
     font:'Radikal-Medium';
     cursor: pointer;
@@ -168,10 +166,10 @@ div.dc-chart {
     margin-right: 15px;
 }
 
-.dc-data-count,.filter-count {
+.dc-data-count .filter-count {
     color: #3182bd;
     font-weight: bold;
-    font-family: 'Radikal-Regular';
+    font:'Radikal-Medium';
 }
 
 .dc-data-count .total-count {
@@ -227,16 +225,14 @@ div.dc-chart {
     fill-opacity: 0.6;
 }
 
-.dc-chart,g.row text {
+.dc-chart g.row text {
     fill: white;
-    font-size: 12px;
-    font-family: 'Radikal-Regular';
+    font-size: 12px'Radikal-Medium';
     cursor: pointer;
 }
 
 .dc-legend {
-    font-size: 11px;
-    font-family: 'Radikal-Regular';
+    font-size: 11px'Radikal-Medium';
 }
 
 .dc-legend-item {
@@ -279,9 +275,8 @@ g.dc-legend-item.fadeout {
     float: none;
 }
 
-.dc-chart,.box text {
-    font: 10px;
-    font-family: 'Radikal-Regular';
+.dc-chart .box text {
+    font: 10px 'Radikal-Medium';
     -webkit-user-select: none; /* Chrome/Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10 */
