@@ -25,7 +25,7 @@
 <div class="row">
   <div class="column" >
     <div class="subRow graphic" id="total-chart">
-      <h2 class="graphics-header ">Total occupancy over time</h2>
+      <h2 class="graphics-header">Total number of people observed over time</h2>
       <a class="reset" style="display:none" href="javascript:lineChart.filterAll(); dc.redrawAll();">Reset</a>
     </div>
   </div>
@@ -59,8 +59,24 @@ window.onload = async () => {
       if (typeof (f.dimension) !== 'undefined') { f = f.dimension(d => '').top(Infinity); } else {}
       console.log(`${filter}(${f.length}) = ${JSON.stringify(f).replace('[', '[\n\t').replace(/}\,/g, '},\n\t').replace(']', '\n]')}`);
     }
-
+//loading data per siteID
     const spaceUsageData = await getSpaceUsage('1001');
+
+  //   var spaceUsageData = [
+  //   {usagePeriodStartTime: "2011-11-14T16:17:54Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceName: "ground"},
+  //   {usagePeriodStartTime: "2011-11-14T16:20:19Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceName: "ground"},
+  //   {usagePeriodStartTime: "2011-11-14T16:28:54Z", spaceNumberOfSeats: 10, numberOfPeopleRecorded: 3, occupancy: 0.3, spaceName: "second"},
+  //   {usagePeriodStartTime: "2011-11-14T16:30:43Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: "ground"},
+  //   {usagePeriodStartTime: "2011-11-14T16:48:46Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 1, spaceName: "ground"},
+  //   {usagePeriodStartTime: "2011-11-14T16:48:46Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: "ground"},
+  //   {usagePeriodStartTime: "2011-11-14T16:53:41Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: "ground"},
+  //   {usagePeriodStartTime: "2011-11-14T16:54:06Z", spaceNumberOfSeats: 14, numberOfPeopleRecorded: 10, occupancy: 0.71, spaceName: "first"},
+  //   {usagePeriodStartTime: "2011-11-14T16:58:03Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: "ground"},
+  //   {usagePeriodStartTime: "2011-11-14T17:07:21Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceName: "ground"},
+  //   {usagePeriodStartTime: "2011-11-14T17:22:59Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceName: "ground"},
+  //   {usagePeriodStartTime: "2011-11-14T17:25:45Z", spaceNumberOfSeats: 14, numberOfPeopleRecorded: 5, occupancy: 0.35, spaceName: "first"},
+  //   {usagePeriodStartTime: "2011-11-14T17:29:52Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 10, occupancy: 0.5, spaceName: "second"}
+  // ];
 
     spaceUsageData.forEach((d) => {
       const tempDate = new Date(d.usagePeriodStartTime);
@@ -70,37 +86,39 @@ window.onload = async () => {
     const facts = crossfilter(spaceUsageData);
 
     // TABLE
-    const dateDimension = facts.dimension(d => d.usagePeriodStartTime);
+    const dateDimension = facts.dimension(spaceUsage => spaceUsage.usagePeriodStartTime);
     const dataTable = dc.dataTable('#recordings-table')
       .width(450)
       .height(550)
       .dimension(dateDimension)
       .showGroups(false)
     // .size(5)
-      .group(d => d.spaceName)
-      .columns([{ label: 'Time', format(d) { return `${d.usagePeriodStartTime.getHours()}:${d.usagePeriodStartTime.getMinutes()}`; } },
+      .group(spaceUsage => spaceUsage.spaceName)
+      .columns([{ label: 'Time', format(d) { return `${spaceUsage.usagePeriodStartTime.getHours()}:${spaceUsage.usagePeriodStartTime.getMinutes()}`; } },
         'spaceOccupancy',
         'spaceName'])
       .sortBy(d => d.usagePeriodStartTime)
       .order(d3.ascending);
 
     // LINE CHART
-    const dateGroup = dateDimension.group().reduceSum(d => d.occupancy);
+    //const dateGroup = dateDimension.group().reduceSum(function(d){ return d.occupancy; });
+    const peopleGroup = dateDimension.group().reduceSum(function(d){ return d.numberOfPeopleRecorded; });
     const minDate = dateDimension.bottom(1)[0].usagePeriodStartTime;
     const maxDate = dateDimension.top(1)[0].usagePeriodStartTime;
     lineChart = dc.lineChart('#total-chart')
-      .width(500)
+      .width(800)
       .height(200)
       .margins({
-        top: 10, bottom: 30, right: 10, left: 70,
+        top: 10, bottom: 30, right: 10, left: 35,
       })
       .dimension(dateDimension)
-      .group(dateGroup, 'occupancy over time')
-      .yAxisLabel('% of occupancy')
+      //.group(dateGroup, 'occupancy')
+      //.stack(peopleGroup,'number of people')
+      .group(peopleGroup,'number of people')
+      .yAxisLabel('# of people')
       .renderHorizontalGridLines(true)
       .renderArea(true)
-      .legend(dc.legend().x(1200).y(5).itemHeight(12)
-        .gap(5))
+      .legend(dc.legend().x(620).y(140).itemHeight(12).gap(5))
       .x(d3.time.scale().domain([minDate, maxDate]));
 
 

@@ -1,7 +1,7 @@
 
 const { axios } = window;
 
-const getSpaceUsageQueryString = `query SpaceUsagesbySiteId($siteId: String) { 
+const getSpaceUsageQueryString = `query SpaceUsagesbySiteId($siteId: String) {
   SpaceUsagesBySiteId(siteId: $siteId) {
     spaceId
     usagePeriodStartTime
