@@ -11,7 +11,7 @@ const getSpaceUsageQueryString = `query SpaceUsagesbySiteId($siteId: String) {
   }}`;
 
 const makeSaveSpaceUsageCall = async siteId => axios.post(
-  'https://test-api-space-usage.herokuapp.com/',
+  'http://localhost:4000/',
   {
     query: getSpaceUsageQueryString,
     variables: { siteId },
