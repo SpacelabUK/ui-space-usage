@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>Dashboard 4</title>
   <link rel="stylesheet" type="text/css" href="../css/dc.css" />
-  <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+  <!-- /*<link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />* -->
   <style>
     .text-beautify  {
       position:absolute;
@@ -172,12 +172,6 @@ window.onload = async () => {
       console.log(`${filter}(${f.length}) = ${JSON.stringify(f).replace('[', '[\n\t').replace(/}\,/g, '},\n\t').replace(']', '\n]')}`);
     }
 
-    // load the data
-    // d3.json("data.json", function(error, data) {
-    //   if (error) throw error;
-    //     });
-    // console.log(data);
-
     const data = [
       {
         usagePeriodStartTime: '2011-11-14T16:17:54Z', spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceName: 'ground',
@@ -295,9 +289,6 @@ window.onload = async () => {
     console.log(error);
   }
 };
-
-// console.log(data);
-// console.log(facts);
 
   </script>
 
