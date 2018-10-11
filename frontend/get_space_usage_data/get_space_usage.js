@@ -7,6 +7,7 @@ const getSpaceUsageQueryString = `query SpaceUsagesbySiteId($siteId: String) {
     usagePeriodStartTime
     usagePeriodEndTime
     spaceName
+    spaceCategory
     occupancy
     numberOfPeopleRecorded
   }}`;
