@@ -114,12 +114,12 @@ window.onload = async () => {
       .dimension(dateDimension)
       // .group(dateGroup, 'occupancy')
       // .stack(peopleGroup,'number of people')
-      .group(peopleGroup, 'number of people')
+      .group(peopleGroup)
       .yAxisLabel('# of people')
       .renderHorizontalGridLines(true)
       .renderArea(true)
-      .legend(dc.legend().x(620).y(140).itemHeight(12)
-        .gap(5))
+      // .legend(dc.legend().x(620).y(140).itemHeight(12)
+      //  .gap(5))
       .x(d3.time.scale().domain([minDate, maxDate]));
 
 
