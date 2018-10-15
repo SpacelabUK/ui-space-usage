@@ -60,7 +60,11 @@ window.onload = async () => {
       console.log(`${filter}(${f.length}) = ${JSON.stringify(f).replace('[', '[\n\t').replace(/}\,/g, '},\n\t').replace(']', '\n]')}`);
     }
     // loading data per siteID
-    const spaceUsageData = await getSpaceUsage('1');
+    const spaceUsageData = await getSpaceUsage({
+      siteId: '1',
+      dayStartTime: '08:00:00',
+      dayEndTime: '18:00:00',
+    });
 
     //   var spaceUsageData = [
     //   {usagePeriodStartTime: "2011-11-14T16:17:54Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceName: "ground"},

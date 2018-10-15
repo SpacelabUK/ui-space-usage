@@ -1,17 +1,18 @@
 
-import { getSpaceUsage } from '../../public/get_space_usage.js';
+import { getSpaceUsage } from '../../frontend/get_space_usage_data/get_space_usage.js';
+import getErrorFromFailingPromise from '../helpers/error_from_failing_promise_getter.js';
+import expectedSpaceUsageQueryString from './expected_space_usage_query_string.js';
 
 /* eslint-env browser */
-const { expect } = window.chai;
-const { axios } = window;
 const { sinon } = window;
+const { axios } = window;
+const { expect } = window.chai;
 
 
 describe('space_usage_api', () => {
-  let expectedSpaceUsageQueryString;
   let mockSpaceUsageData;
-  let postStub;
-  let mockSiteId;
+  const postStub = sinon.stub(axios, 'post');
+  let getSpaceUsageParams;
 
   const setUpStubbedSuccessfulGetSpaceUsageApiCall = () => {
     mockSpaceUsageData = 'space usage data';
@@ -19,21 +20,12 @@ describe('space_usage_api', () => {
     const mockSuccessfulGetSpaceUsageResponse = {
       data: {
         data: {
-          SpaceUsagesBySiteId: mockSpaceUsageData,
+          SpaceUsagesWithSpaceInfo: mockSpaceUsageData,
         },
       },
     };
 
-    postStub = sinon.stub(axios, 'post');
-    postStub.returns(mockSuccessfulGetSpaceUsageResponse);
-  };
-
-  const getErrorFromFailingPromise = async (failingPromise) => {
-    try {
-      return await failingPromise;
-    } catch (error) {
-      return error;
-    }
+    postStub.returns(Promise.resolve(mockSuccessfulGetSpaceUsageResponse));
   };
 
   const setStubbedSpaceUsageApiToReturnSuccessResponseWithNestedError = () => {
@@ -51,25 +43,20 @@ describe('space_usage_api', () => {
   };
 
   before(() => {
-    expectedSpaceUsageQueryString = `query SpaceUsagesbySiteId($siteId: String) { 
-      SpaceUsagesBySiteId(siteId: $siteId) {
-        _id
-        spaceId
-        usagePeriodStartTime
-        usagePeriodEndTime
-        numberOfPeopleRecorded
-      }}`;
-
     setUpStubbedSuccessfulGetSpaceUsageApiCall();
 
-    mockSiteId = '1901';
+    getSpaceUsageParams = {
+      siteId: '1901',
+      dayStartTime: '08:00:00 GMT',
+      dayEndTime: '19:00:00 GMT',
+    };
   });
 
   it('should call get space usage api with the specified site id and correct query format, returning the space usage data via a promise', async () => {
-    const returnedSpaceUsages = await getSpaceUsage(mockSiteId);
+    const returnedSpaceUsages = await getSpaceUsage(getSpaceUsageParams);
 
     expect(postStub.args[0][0]).equals('http://localhost:4000/');
-    expect(postStub.args[0][1].variables).deep.equals({ siteId: mockSiteId });
+    expect(postStub.args[0][1].variables).deep.equals(getSpaceUsageParams);
     expect(postStub.args[0][1].query).equalIgnoreSpaces(expectedSpaceUsageQueryString);
     expect(returnedSpaceUsages).equals(mockSpaceUsageData);
   });
@@ -78,7 +65,7 @@ describe('space_usage_api', () => {
     const error = new Error('some error');
     postStub.returns(Promise.reject(error));
 
-    const response = getSpaceUsage(mockSiteId);
+    const response = getSpaceUsage(getSpaceUsageParams);
     const errorFromSaveSpaceUsage = await getErrorFromFailingPromise(response);
 
     expect(errorFromSaveSpaceUsage).equals(error);
@@ -88,7 +75,7 @@ describe('space_usage_api', () => {
     const { apiResponseErrorMessage, apiResponse }
       = setStubbedSpaceUsageApiToReturnSuccessResponseWithNestedError();
 
-    const response = getSpaceUsage(mockSiteId);
+    const response = getSpaceUsage(getSpaceUsageParams);
     const errorFromSaveSpaceUsage = await getErrorFromFailingPromise(response);
 
     expect(errorFromSaveSpaceUsage.message).equals(apiResponseErrorMessage);
