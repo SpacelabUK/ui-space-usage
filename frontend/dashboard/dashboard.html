@@ -134,7 +134,7 @@ window.onload = async () => {
     const qtyDimension = facts.dimension((spaceUsage) => {
       const { occupancy } = spaceUsage;
       if (occupancy >= 0 && occupancy < 0.2) {
-        return 'Less than 20% occupancy';
+        return '0-20% occupancy';
       } else if (occupancy >= 0.2 && occupancy < 0.4) {
         return '20-40% occupancy';
       } else if (occupancy >= 0.4 && occupancy < 0.6) {
