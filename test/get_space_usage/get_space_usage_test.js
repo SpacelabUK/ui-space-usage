@@ -55,7 +55,7 @@ describe('space_usage_api', () => {
   it('should call get space usage api with the specified site id and correct query format, returning the space usage data via a promise', async () => {
     const returnedSpaceUsages = await getSpaceUsage(getSpaceUsageParams);
 
-    expect(postStub.args[0][0]).equals('http://localhost:4000/');
+    expect(postStub.args[0][0]).equals('https://test-api-space-usage.herokuapp.com/');
     expect(postStub.args[0][1].variables).deep.equals(getSpaceUsageParams);
     expect(postStub.args[0][1].query).equalIgnoreSpaces(expectedSpaceUsageQueryString);
     expect(returnedSpaceUsages).equals(mockSpaceUsageData);
