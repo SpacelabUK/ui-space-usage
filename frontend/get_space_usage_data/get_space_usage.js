@@ -1,21 +1,30 @@
 
 const { axios } = window;
 
-const getSpaceUsageQueryString = `query SpaceUsagesbySiteId($siteId: String) {
-  SpaceUsagesBySiteId(siteId: $siteId) {
-    spaceId
-    usagePeriodStartTime
-    usagePeriodEndTime
-    spaceName
-    occupancy
-    numberOfPeopleRecorded
+const getSpaceUsageQueryString = `query SpaceUsagesWithSpaceInfo(
+  $siteId: String,
+  $dayStartTime: String,
+  $dayEndTime: String
+  ) {
+    SpaceUsagesWithSpaceInfo(     
+      siteId: $siteId,
+      dayStartTime: $dayStartTime,
+      dayEndTime: $dayEndTime
+      ) {
+        spaceId
+        usagePeriodStartTime
+        usagePeriodEndTime
+        spaceName
+        spaceCategory
+        occupancy
+        numberOfPeopleRecorded
   }}`;
 
-const makeSaveSpaceUsageCall = async siteId => axios.post(
+const makeGetSpaceUsageCall = async queryParams => axios.post(
   'https://test-api-space-usage.herokuapp.com/',
   {
     query: getSpaceUsageQueryString,
-    variables: { siteId },
+    variables: queryParams,
   },
 );
 
@@ -29,10 +38,10 @@ const throwIfSuccessfulGraphqlResponseHasNestedError = (response) => {
 
 export const getSpaceUsage = async (siteId) => {
   try {
-    const response = await makeSaveSpaceUsageCall(siteId);
+    const response = await makeGetSpaceUsageCall(siteId);
     throwIfSuccessfulGraphqlResponseHasNestedError(response);
 
-    return response.data.data.SpaceUsagesBySiteId;
+    return response.data.data.SpaceUsagesWithSpaceInfo;
   } catch (error) {
     throw error;
   }
