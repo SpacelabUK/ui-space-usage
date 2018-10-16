@@ -84,9 +84,3 @@ g.axis text {
 .y-axis-label {
   font-size: 16px;
 }
-
-svg {
-  display: flex;
-  flex-direction: column;
-}
-

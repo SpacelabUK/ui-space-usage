@@ -13,7 +13,9 @@
 <div class="row">
   <div class="column" >
     <div class="subColumn graphic" id="ocup-chart">
-      <h2 class="graphics-header">Percentage of spaces in each occupancy profile</h2>
+      <h2 class="graphics-header">Percentage of spaces in each<br />
+        occupancy profile
+      </h2>
       <a class="reset" style="display:none" href="javascript:pieChart.filterAll(); dc.redrawAll();"><ruby></ruby>Reset</a>
     </div>
     <div class="subColumn graphic" id="type-chart">
@@ -147,8 +149,8 @@ window.onload = async () => {
     const qtyGroup = qtyDimension.group();
 
     pieChart = dc.pieChart('#ocup-chart')
-      .height(300)
-      .width(300)
+      .width(400)
+      .cx(250)
       .slicesCap(5)
       .radius(100)
       .innerRadius(40)
