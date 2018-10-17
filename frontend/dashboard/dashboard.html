@@ -13,10 +13,12 @@
 <div class="row">
   <div class="column" >
     <div class="subColumn graphic" id="ocup-chart">
-      <h2 class="graphics-header">Occupancy</h2>
+      <h2 class="graphics-header">Percentage of spaces in each<br />
+        occupancy profile
+      </h2>
       <a class="reset" style="display:none" href="javascript:pieChart.filterAll(); dc.redrawAll();"><ruby></ruby>Reset</a>
     </div>
-    <div class="subColumn graphic" id="type-chart">
+    <div class="subColumn graphic space-type" id="type-chart">
       <h2 class="graphics-header">Space type</h2>
       <a class="reset" style="display:none" href="javascript:rowChart.filterAll(); dc.redrawAll();">Reset</a>
     </div>
@@ -131,19 +133,33 @@ window.onload = async () => {
     lineChart.xAxis().ticks(6);
 
     // PIE CHART
-    const qtyDimension = facts.dimension(d => d.occupancy);
+    const qtyDimension = facts.dimension((spaceUsage) => {
+      const { occupancy } = spaceUsage;
+      if (occupancy >= 0 && occupancy < 0.2) {
+        return 'occupied 0-20% of the time';
+      } else if (occupancy >= 0.2 && occupancy < 0.4) {
+        return 'occupied 20-40% of the time';
+      } else if (occupancy >= 0.4 && occupancy < 0.6) {
+        return 'occupied 40-60% of the time';
+      } else if (occupancy >= 0.6 && occupancy < 0.8) {
+        return 'occupied 60-80% of the time';
+      }
+      return 'occupied 80-100% of the time';
+    });
     const qtyGroup = qtyDimension.group();
 
     pieChart = dc.pieChart('#ocup-chart')
-      .height(300)
       .width(300)
+      .height(320)
+      .cx(150)
+      .cy(100)
       .slicesCap(5)
-      .radius(100)
+      .radius(90)
       .innerRadius(40)
     // .filter(1)
       .dimension(qtyDimension)
       .group(qtyGroup)
-      .legend(dc.legend())
+      .legend(dc.legend().x(65).y(210).itemHeight(12))
       .on('pretransition', (chart) => {
         chart.selectAll('text.pie-slice').text(d => `${Math.round(dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2 * Math.PI) * 100))}%`);
       });

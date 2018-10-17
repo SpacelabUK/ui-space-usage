@@ -37,32 +37,36 @@ g.axis text, .y-axis-label, .graphics-header,.dc-legend, .dc-chart {
   font-size: 12px;
 }
 
+.space-type rect {
+  fill: #65bd5d;
+}
+
 .dc-chart {
   color: white;
 }
 
 .pie-slice._0 path, g.pie-slice._0.deselected path, .dc-legend-item:nth-child(1) rect {
-  fill: #5A343B;
+  fill: #BEBEBE;
 }
 
 .pie-slice._1 path, g.pie-slice._1.deselected path, .dc-legend-item:nth-child(2) rect {
-  fill: #594B56;
-}
-
-.pie-slice._2 path, g.pie-slice._2.deselected path, .dc-legend-item:nth-child(3) rect {
-  fill: #617F7C;
-}
-
-.pie-slice._3 path, g.pie-slice._3.deselected path, .dc-legend-item:nth-child(4) rect {
-  fill: #5DC2BC;
-}
-
-.pie-slice._4 path, g.pie-slice._4.deselected path, .dc-legend-item:nth-child(5) rect {
   fill: #A2BDBC;
 }
 
+.pie-slice._2 path, g.pie-slice._2.deselected path, .dc-legend-item:nth-child(3) rect {
+  fill: #5DC2BC;
+}
+
+.pie-slice._3 path, g.pie-slice._3.deselected path, .dc-legend-item:nth-child(4) rect {
+  fill: #617F7C;
+}
+
+.pie-slice._4 path, g.pie-slice._4.deselected path, .dc-legend-item:nth-child(5) rect {
+  fill: #594B56;
+}
+
 .pie-slice._5 path, g.pie-slice._5.deselected path, .pie-slice._5 path.deselected, .dc-legend-item:nth-child(6) rect {
-  fill: #BEBEBE;
+  fill: #5A343B;
 }
 
 .dc-chart path.area {
@@ -84,4 +88,3 @@ g.axis text {
 .y-axis-label {
   font-size: 16px;
 }
-
