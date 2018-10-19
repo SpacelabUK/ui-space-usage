@@ -5,6 +5,10 @@ body {
   align-items: center;
 }
 
+.graphic {
+  padding: 15px;
+}
+
 @font-face {
   font-family: 'Radikal-Regular'; /*a name to be used later*/
   src: url('../Fonts/Radikal-Regular.otf'); /*URL to font*/
@@ -15,7 +19,12 @@ body {
   font-family: 'Radikal-Regular';
 }
 
-.page-header, .dc-legend, .graphics-header {
+.number-display {
+  font-size: 110px;
+  font-family: 'Radikal-Regular';
+}
+
+.page-header, .dc-legend, .graphics-header, .number-display {
   color: black;
 }
 

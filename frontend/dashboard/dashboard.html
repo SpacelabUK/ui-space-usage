@@ -14,7 +14,6 @@
   <div class="column" >
     <div class="subColumn graphic" id="average-occupancy">
       <h2 class="graphics-header">Average occupancy</h2>
-      <a class="reset" style="display:none" href="javascript:numberDisplay.filterAll(); dc.redrawAll();"><ruby></ruby>Reset</a>
     </div>
     <div class="subColumn graphic" id="ocup-chart">
       <h2 class="graphics-header">Percentage of spaces in each<br />
@@ -58,14 +57,6 @@
 
 window.onload = async () => {
   try {
-    function print_filter(filter) {
-      let f = eval(filter);
-      if (typeof (f.length) !== 'undefined') {} else {}
-      if (typeof (f.top) !== 'undefined') { f = f.top(Infinity); } else {}
-      if (typeof (f.dimension) !== 'undefined') { f = f.dimension(d => '').top(Infinity); } else {}
-      console.log(`${filter}(${f.length}) = ${JSON.stringify(f).replace('[', '[\n\t').replace(/}\,/g, '},\n\t').replace(']', '\n]')}`);
-    }
-    // loading data per siteID
     const spaceUsageData = await getSpaceUsage({
       siteId: '1',
       dayStartTime: '08:00:00',
@@ -86,7 +77,6 @@ window.onload = async () => {
       .height(550)
       .dimension(dateDimension)
       .showGroups(false)
-    // .size(5)
       .group(spaceUsage => spaceUsage.spaceName)
       .columns([{ label: 'Time', format(d) { return `${spaceUsage.usagePeriodStartTime.getHours()}:${spaceUsage.usagePeriodStartTime.getMinutes()}`; } },
         'spaceOccupancy',
@@ -95,7 +85,6 @@ window.onload = async () => {
       .order(d3.ascending);
 
     // LINE CHART
-    // const dateGroup = dateDimension.group().reduceSum(function(d){ return d.occupancy; });
     const peopleGroup = dateDimension.group().reduceSum(d => d.numberOfPeopleRecorded);
     const minDate = dateDimension.bottom(1)[0].usagePeriodStartTime;
     const maxDate = dateDimension.top(1)[0].usagePeriodStartTime;
@@ -106,14 +95,10 @@ window.onload = async () => {
         top: 10, bottom: 30, right: 10, left: 35,
       })
       .dimension(dateDimension)
-      // .group(dateGroup, 'occupancy')
-      // .stack(peopleGroup,'number of people')
       .group(peopleGroup)
       .yAxisLabel('# of people')
       .renderHorizontalGridLines(true)
       .renderArea(true)
-      // .legend(dc.legend().x(620).y(140).itemHeight(12)
-      //  .gap(5))
       .x(d3.time.scale().domain([minDate, maxDate]));
 
 
@@ -124,7 +109,7 @@ window.onload = async () => {
     const qtyDimension = facts.dimension((spaceUsage) => {
       const { occupancy } = spaceUsage;
       if (occupancy >= 0 && occupancy < 0.2) {
-        return 'occupied 0-20% of the time';
+        return 'occupied 0-20% occupied';
       } else if (occupancy >= 0.2 && occupancy < 0.4) {
         return 'occupied 20-40% of the time';
       } else if (occupancy >= 0.4 && occupancy < 0.6) {
@@ -144,7 +129,6 @@ window.onload = async () => {
       .slicesCap(5)
       .radius(90)
       .innerRadius(40)
-    // .filter(1)
       .dimension(qtyDimension)
       .group(qtyGroup)
       .legend(dc.legend().x(65).y(210).itemHeight(12))
@@ -162,27 +146,31 @@ window.onload = async () => {
       .group(typeGroup)
       .dimension(typeDimension);
 
-    const occupancyDimension = facts.dimension(spaceUsage => spaceUsage.occupancy);
     const occupancyGroup = facts.groupAll();
 
-    const reduceAdd = ({ sumOfOccupancy, noOfSpaces }, spaceUsage) => ({
+    const reduceAdd = ({ sumOfOccupancy, noOfSpaceUsageRecords }, spaceUsage) => ({
       sumOfOccupancy: sumOfOccupancy + spaceUsage.occupancy,
-      noOfSpaces: noOfSpaces + 1,
+      noOfSpaceUsageRecords: noOfSpaceUsageRecords + 1,
     });
-    const reduceRemove = paramsToCalcAvgOccupancy => paramsToCalcAvgOccupancy;
+
+    const reduceRemove = ({ sumOfOccupancy, noOfSpaceUsageRecords }, spaceUsage) => ({
+      sumOfOccupancy: sumOfOccupancy - spaceUsage.occupancy,
+      noOfSpaceUsageRecords: noOfSpaceUsageRecords - 1,
+    });
 
     const reduceInitial = () => ({
       sumOfOccupancy: 0,
-      noOfSpaces: 0,
+      noOfSpaceUsageRecords: 0,
     });
 
     occupancyGroup.reduce(reduceAdd, reduceRemove, reduceInitial);
 
     numberDisplay = dc.numberDisplay('#average-occupancy')
       .group(occupancyGroup)
-      .valueAccessor(({ sumOfOccupancy, noOfSpaces }) => {
-        return sumOfOccupancy / noOfSpaces;
-      });
+      .valueAccessor(({ sumOfOccupancy, noOfSpaceUsageRecords }) => {
+        return sumOfOccupancy / noOfSpaceUsageRecords;
+      })
+      .formatNumber(d3.format('.0%'));
 
     dc.renderAll();
   } catch (error) {
