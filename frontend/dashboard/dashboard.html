@@ -12,6 +12,10 @@
 <p class="text-beautify page-header">Workplace monitoring dashboard</p>
 <div class="row">
   <div class="column" >
+    <div class="subColumn graphic" id="average-occupancy">
+      <h2 class="graphics-header">Average occupancy</h2>
+      <a class="reset" style="display:none" href="javascript:numberDisplay.filterAll(); dc.redrawAll();"><ruby></ruby>Reset</a>
+    </div>
     <div class="subColumn graphic" id="ocup-chart">
       <h2 class="graphics-header">Percentage of spaces in each<br />
         occupancy profile
@@ -68,22 +72,6 @@ window.onload = async () => {
       dayEndTime: '18:00:00',
     });
 
-    //   var spaceUsageData = [
-    //   {usagePeriodStartTime: "2011-11-14T16:17:54Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceName: "ground"},
-    //   {usagePeriodStartTime: "2011-11-14T16:20:19Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 19, occupancy: 0.95, spaceName: "ground"},
-    //   {usagePeriodStartTime: "2011-11-14T16:28:54Z", spaceNumberOfSeats: 10, numberOfPeopleRecorded: 3, occupancy: 0.3, spaceName: "second"},
-    //   {usagePeriodStartTime: "2011-11-14T16:30:43Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: "ground"},
-    //   {usagePeriodStartTime: "2011-11-14T16:48:46Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 1, spaceName: "ground"},
-    //   {usagePeriodStartTime: "2011-11-14T16:48:46Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: "ground"},
-    //   {usagePeriodStartTime: "2011-11-14T16:53:41Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: "ground"},
-    //   {usagePeriodStartTime: "2011-11-14T16:54:06Z", spaceNumberOfSeats: 14, numberOfPeopleRecorded: 10, occupancy: 0.71, spaceName: "first"},
-    //   {usagePeriodStartTime: "2011-11-14T16:58:03Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.45, spaceName: "ground"},
-    //   {usagePeriodStartTime: "2011-11-14T17:07:21Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceName: "ground"},
-    //   {usagePeriodStartTime: "2011-11-14T17:22:59Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 9, occupancy: 0.95, spaceName: "ground"},
-    //   {usagePeriodStartTime: "2011-11-14T17:25:45Z", spaceNumberOfSeats: 14, numberOfPeopleRecorded: 5, occupancy: 0.35, spaceName: "first"},
-    //   {usagePeriodStartTime: "2011-11-14T17:29:52Z", spaceNumberOfSeats: 20, numberOfPeopleRecorded: 10, occupancy: 0.5, spaceName: "second"}
-    // ];
-
     spaceUsageData.forEach((d) => {
       const tempDate = new Date(d.usagePeriodStartTime);
       d.usagePeriodStartTime = tempDate;
@@ -93,7 +81,7 @@ window.onload = async () => {
 
     // TABLE
     const dateDimension = facts.dimension(spaceUsage => spaceUsage.usagePeriodStartTime);
-    const dataTable = dc.dataTable('#recordings-table')
+    dataTable = dc.dataTable('#recordings-table')
       .width(450)
       .height(550)
       .dimension(dateDimension)
@@ -173,6 +161,28 @@ window.onload = async () => {
       .height(300)
       .group(typeGroup)
       .dimension(typeDimension);
+
+    const occupancyDimension = facts.dimension(spaceUsage => spaceUsage.occupancy);
+    const occupancyGroup = facts.groupAll();
+
+    const reduceAdd = ({ sumOfOccupancy, noOfSpaces }, spaceUsage) => ({
+      sumOfOccupancy: sumOfOccupancy + spaceUsage.occupancy,
+      noOfSpaces: noOfSpaces + 1,
+    });
+    const reduceRemove = paramsToCalcAvgOccupancy => paramsToCalcAvgOccupancy;
+
+    const reduceInitial = () => ({
+      sumOfOccupancy: 0,
+      noOfSpaces: 0,
+    });
+
+    occupancyGroup.reduce(reduceAdd, reduceRemove, reduceInitial);
+
+    numberDisplay = dc.numberDisplay('#average-occupancy')
+      .group(occupancyGroup)
+      .valueAccessor(({ sumOfOccupancy, noOfSpaces }) => {
+        return sumOfOccupancy / noOfSpaces;
+      });
 
     dc.renderAll();
   } catch (error) {
