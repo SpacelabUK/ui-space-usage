@@ -1,0 +1,99 @@
+body {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.graphic {
+  padding: 15px;
+}
+
+@font-face {
+  font-family: 'Radikal-Regular'; /*a name to be used later*/
+  src: url('../Fonts/Radikal-Regular.otf'); /*URL to font*/
+}
+
+.page-header {
+  font-size: 35px;
+  font-family: 'Radikal-Regular';
+}
+
+.number-display {
+  font-size: 110px;
+  font-family: 'Radikal-Regular';
+}
+
+.page-header, .dc-legend, .graphics-header, .number-display {
+  color: black;
+}
+
+@font-face {
+  font-family: 'Radikal-Thin'; 
+  src: url('../Fonts/Radikal-Thin.otf'); 
+}
+
+g.axis text, .y-axis-label, .graphics-header,.dc-legend, .dc-chart {
+  font-family: 'Radikal-Thin';
+}
+
+.graphics-header {
+  text-align: center;
+  font-size: 20px;
+}
+
+.dc-legend, .dc-chart {
+  font-size: 12px;
+}
+
+.space-type rect {
+  fill: #65bd5d;
+}
+
+.dc-chart {
+  color: white;
+}
+
+.pie-slice._0 path, g.pie-slice._0.deselected path, .dc-legend-item:nth-child(1) rect {
+  fill: #BEBEBE;
+}
+
+.pie-slice._1 path, g.pie-slice._1.deselected path, .dc-legend-item:nth-child(2) rect {
+  fill: #A2BDBC;
+}
+
+.pie-slice._2 path, g.pie-slice._2.deselected path, .dc-legend-item:nth-child(3) rect {
+  fill: #5DC2BC;
+}
+
+.pie-slice._3 path, g.pie-slice._3.deselected path, .dc-legend-item:nth-child(4) rect {
+  fill: #617F7C;
+}
+
+.pie-slice._4 path, g.pie-slice._4.deselected path, .dc-legend-item:nth-child(5) rect {
+  fill: #594B56;
+}
+
+.pie-slice._5 path, g.pie-slice._5.deselected path, .pie-slice._5 path.deselected, .dc-legend-item:nth-child(6) rect {
+  fill: #5A343B;
+}
+
+.dc-chart path.area {
+  fill: #5DC2BB;
+}
+
+.dc-chart .grid-line line, .dc-chart .axis .grid-line line {
+  opacity: 0.7;
+}
+
+.dc-chart path.line {
+  stroke-width: 0px;
+}
+
+g.axis text {
+  font-size: 10px;
+}
+
+.y-axis-label {
+  font-size: 16px;
+}
