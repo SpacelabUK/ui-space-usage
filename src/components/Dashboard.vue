@@ -48,10 +48,12 @@
 
 <script>
 import { getSpaceUsage } from "../services/get_space_usage.js";
+import * as d3 from "d3";
+const crossfilter = require("crossfilter2");
+const dc = require("dc");
 
 export default {
   created: async () => {
-    console.log("stff");
     try {
       const spaceUsageData = await getSpaceUsage({
         siteId: "1",
@@ -70,25 +72,6 @@ export default {
       const dateDimension = facts.dimension(
         spaceUsage => spaceUsage.usagePeriodStartTime
       );
-      dataTable = dc
-        .dataTable("#recordings-table")
-        .width(450)
-        .height(550)
-        .dimension(dateDimension)
-        .showGroups(false)
-        .group(spaceUsage => spaceUsage.spaceName)
-        .columns([
-          {
-            label: "Time",
-            format(d) {
-              return `${spaceUsage.usagePeriodStartTime.getHours()}:${spaceUsage.usagePeriodStartTime.getMinutes()}`;
-            }
-          },
-          "spaceOccupancy",
-          "spaceName"
-        ])
-        .sortBy(d => d.usagePeriodStartTime)
-        .order(d3.ascending);
 
       // LINE CHART
       const peopleGroup = dateDimension
@@ -96,22 +79,21 @@ export default {
         .reduceSum(d => d.numberOfPeopleRecorded);
       const minDate = dateDimension.bottom(1)[0].usagePeriodStartTime;
       const maxDate = dateDimension.top(1)[0].usagePeriodStartTime;
-      lineChart = dc
-        .lineChart("#total-chart")
-        .width(800)
-        .height(200)
-        .margins({
-          top: 10,
-          bottom: 30,
-          right: 10,
-          left: 35
-        })
-        .dimension(dateDimension)
-        .group(peopleGroup)
-        .yAxisLabel("# of people")
-        .renderHorizontalGridLines(true)
-        .renderArea(true)
-        .x(d3.time.scale().domain([minDate, maxDate]));
+      const lineChart = dc.lineChart("#total-chart");
+      lineChart.width(800);
+      lineChart.height(200);
+      lineChart.margins({
+        top: 10,
+        bottom: 30,
+        right: 10,
+        left: 35
+      });
+      lineChart.dimension(dateDimension);
+      lineChart.group(peopleGroup);
+      lineChart.yAxisLabel("# of people");
+      lineChart.renderHorizontalGridLines(true);
+      lineChart.renderArea(true);
+      lineChart.x(d3.scaleTime().domain([minDate, maxDate]));
 
       lineChart.yAxis().ticks(6);
       lineChart.xAxis().ticks(6);
@@ -132,7 +114,7 @@ export default {
       });
       const qtyGroup = qtyDimension.group();
 
-      pieChart = dc
+      const pieChart = dc
         .pieChart("#ocup-chart")
         .width(300)
         .height(320)
@@ -167,7 +149,7 @@ export default {
       const typeDimension = facts.dimension(d => d.spaceCategory);
       const typeGroup = typeDimension.group();
 
-      rowChart = dc
+      const rowChart = dc
         .rowChart("#type-chart")
         .height(300)
         .group(typeGroup)
@@ -198,7 +180,7 @@ export default {
 
       occupancyGroup.reduce(reduceAdd, reduceRemove, reduceInitial);
 
-      numberDisplay = dc
+      const numberDisplay = dc
         .numberDisplay("#average-occupancy")
         .group(occupancyGroup)
         .valueAccessor(({ sumOfOccupancy, noOfSpaceUsageRecords }) => {
