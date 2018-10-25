@@ -1,6 +1,6 @@
 <template>
   <div class="overall-dashboard-page">
-    <p class="text-beautify page-header">Workplace monitoring dashboard</p>
+    <p class="text-beautify page-header">Monitoring dashboard</p>
     <div class="row">
       <div 
         id="average-occupancy" 

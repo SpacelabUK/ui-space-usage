@@ -91,6 +91,10 @@ g.axis text, .y-axis-label, .graphics-header,.dc-legend, .dc-chart {
   opacity: 0.2;
 }
 
+.pie-slice, .dc-legend-item, .dc-chart .row { 
+  cursor: pointer; 
+}
+
 .dc-chart .grid-line line, .dc-chart .axis .grid-line line {
   opacity: 0.7;
 }
