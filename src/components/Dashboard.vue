@@ -1,46 +1,42 @@
 <template>
-  <div>
+  <div class="overall-dashboard-page">
     <p class="text-beautify page-header">Workplace monitoring dashboard</p>
     <div class="row">
-      <div class="column" >
-        <div 
-          id="average-occupancy" 
-          class="subColumn graphic">
-          <h2 class="graphics-header">Average occupancy</h2>
-        </div>
-        <div 
-          id="ocup-chart" 
-          class="subColumn graphic">
-          <h2 class="graphics-header">Percentage of spaces in each<br >
-            occupancy profile
-          </h2>
-          <a 
-            class="reset" 
-            style="display:none" 
-            href="javascript:pieChart.filterAll(); dc.redrawAll();"><ruby/>Reset</a>
-        </div>
-        <div 
-          id="type-chart" 
-          class="subColumn graphic space-type">
-          <h2 class="graphics-header">Space type</h2>
-          <a 
-            class="reset" 
-            style="display:none" 
-            href="javascript:rowChart.filterAll(); dc.redrawAll();">Reset</a>
-        </div>
+      <div 
+        id="average-occupancy" 
+        class="subColumn graphic">
+        <h2 class="graphics-header">Average occupancy</h2>
+      </div>
+      <div 
+        id="ocup-chart" 
+        class="subColumn graphic">
+        <h2 class="graphics-header">Percentage of spaces in each<br >
+          occupancy profile
+        </h2>
+        <a 
+          class="reset" 
+          style="display:none" 
+          href="javascript:pieChart.filterAll(); dc.redrawAll();"><ruby/>Reset</a>
+      </div>
+      <div 
+        id="type-chart" 
+        class="subColumn graphic space-type">
+        <h2 class="graphics-header">Space type</h2>
+        <a 
+          class="reset" 
+          style="display:none" 
+          href="javascript:rowChart.filterAll(); dc.redrawAll();">Reset</a>
       </div>
     </div>
     <div class="row">
-      <div class="column" >
-        <div 
-          id="total-chart" 
-          class="subRow graphic">
-          <h2 class="graphics-header">Total number of people observed over time</h2>
-          <a 
-            class="reset" 
-            style="display:none" 
-            href="javascript:lineChart.filterAll(); dc.redrawAll();">Reset</a>
-        </div>
+      <div 
+        id="total-chart" 
+        class="subRow graphic">
+        <h2 class="graphics-header">Total number of people observed over time</h2>
+        <a 
+          class="reset" 
+          style="display:none" 
+          href="javascript:lineChart.filterAll(); dc.redrawAll();">Reset</a>
       </div>
     </div>
   </div>
