@@ -79,21 +79,22 @@ export default {
         .reduceSum(d => d.numberOfPeopleRecorded);
       const minDate = dateDimension.bottom(1)[0].usagePeriodStartTime;
       const maxDate = dateDimension.top(1)[0].usagePeriodStartTime;
-      const lineChart = dc.lineChart("#total-chart");
-      lineChart.width(800);
-      lineChart.height(200);
-      lineChart.margins({
-        top: 10,
-        bottom: 30,
-        right: 10,
-        left: 35
-      });
-      lineChart.dimension(dateDimension);
-      lineChart.group(peopleGroup);
-      lineChart.yAxisLabel("# of people");
-      lineChart.renderHorizontalGridLines(true);
-      lineChart.renderArea(true);
-      lineChart.x(d3.scaleTime().domain([minDate, maxDate]));
+      const lineChart = dc
+        .lineChart("#total-chart")
+        .width(800)
+        .height(200)
+        .margins({
+          top: 10,
+          bottom: 30,
+          right: 10,
+          left: 35
+        })
+        .dimension(dateDimension)
+        .group(peopleGroup)
+        .yAxisLabel("# of people")
+        .renderHorizontalGridLines(true)
+        .renderArea(true)
+        .x(d3.scaleTime().domain([minDate, maxDate]));
 
       lineChart.yAxis().ticks(6);
       lineChart.xAxis().ticks(6);
