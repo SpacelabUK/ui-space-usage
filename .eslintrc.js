@@ -8,10 +8,11 @@ module.exports = {
     parser: "babel-eslint"
   },
   env: {
-    browser: true
+    browser: true,
+    mocha: true
   },
-  extends: ["prettier", "prettier/standard", "plugin:vue/recommended"],
-  plugins: ["vue", "prettier"],
+  extends: ["prettier", "prettier/standard", "plugin:vue/recommended", "plugin:import/errors"],
+  plugins: ["vue", "prettier", "mocha"],
   rules: {
     "prettier/prettier": "error"
   },
